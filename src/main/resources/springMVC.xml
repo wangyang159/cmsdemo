@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/mvc
+	    http://www.springframework.org/schema/mvc/spring-mvc.xsd"
+>
+    <!-- 扫描controller -->
+    <context:component-scan base-package="com.wy.controller"></context:component-scan>
+
+    <!-- 启动前端注解驱动 -->
+    <mvc:annotation-driven />
+
+    <!-- 禁止拦截静态资源 -->
+    <mvc:default-servlet-handler/>
+
+    <!-- 视图解析图 ，这个可以先注释，它的作用就是自动拼接请求的公共部分，是的开发中可以只写不同的地方-->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 配置前缀 -->
+        <property name="prefix" value="/WEB-INF/view/"></property>
+        <!-- 配置后缀 -->
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+
+    <!-- 上传支持，如果你的开发中涉及到上传那么可以使用这个，这是spring框架提供的上传接收类，不过用的时候注意id和class是框架内部定死的 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 文件名的编码格式 -->
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!--  上传文件的大小  10兆-->
+        <property name="maxUploadSize" value="10485760"/>
+        <!-- 单个文件上传的大小 -->
+        <property name="maxUploadSizePerFile" value="1048576"/>
+    </bean>
+
+</beans>
