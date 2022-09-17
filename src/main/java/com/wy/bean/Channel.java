@@ -22,6 +22,7 @@ public class Channel implements Serializable{
 	private String description;//描述
 	private String icon;//栏目图标
 	private Integer sorted;//排序
+
 	public Integer getId() {
 		return id;
 	}

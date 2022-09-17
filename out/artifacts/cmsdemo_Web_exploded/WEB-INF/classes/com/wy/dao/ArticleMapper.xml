@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--mybatis 映射文件的根标签    namespace:命名空间-->
+<mapper namespace="com.wy.dao.ArticleMapper">
+	<insert id="insertArticle">
+		insert into cms_article
+     	(title,summary,content,picture,channel_id,category_id,user_id,
+     	hits,hot,status,deleted,created,updated,keywords,original,content_type)
+     	values(#{title},#{summary},#{content},#{picture},#{channelId},
+     	#{categoryId},#{userId},#{hits},#{hot},#{status},#{deleted},#{created},
+     	#{updated},#{keywords},#{original},#{contentType})
+	</insert>
+	
+	<resultMap type="com.wy.bean.Article" id="articleResultMap">
+		<id column="id" property="id" />
+		<!-- 基本信息 -->
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="picture" property="picture" />
+		<result column="channel_Id" property="channelId" />
+		<result column="category_Id" property="categoryId" />
+		<result column="user_Id" property="userId" />
+		<result column="hits" property="hits" />
+		<result column="status" property="status" />
+		<result column="deleted" property="deleted" />
+		<result column="created" property="created" />
+		<result column="updated" property="updated" />
+		<result column="hot" property="hot" />
+		<result column="content_Type" property="contentType" />
+		<result column="keywords" property="keywords" />
+		<result column="original" property="original" />
+		<!-- 封装一对一的关系对象 -->
+		<association property="channel" javaType="com.wy.bean.Channel"
+			select="selectByChannelId" column="channel_id" />
+		<association property="category" javaType="com.wy.bean.Category"
+			select="selectByCategoryId" column="category_id" />
+		<association property="user" javaType="com.wy.bean.User"
+			select="selectByUserId" column="user_id" />
+	</resultMap>
+	
+	<select id="selectByChannelId" resultType="com.wy.bean.Channel">
+		select * from cms_channel where id =#{channel_id}
+	</select>
+
+	<select id="selectByCategoryId" resultType="com.wy.bean.Category">
+		select * from cms_category where id =#{category_id}
+	</select>
+
+	<select id="selectByUserId" resultType="com.wy.bean.User">
+		select * from cms_user where id =#{user_id}
+	</select>
+	
+	<select id="selectArticle" resultMap="articleResultMap">
+		select  * from cms_article
+		<where>
+			<if test="article.userId!=null">
+				user_id = #{article.userId}
+			</if>
+			<!-- 根据文章的审核状态 -->
+			<if test="article.status!=null">
+				and status =#{article.status}
+			</if>
+			<!-- 按照删除状态 0：未删除 1：删除 -->
+			<if test="article.deleted!=null">
+			  	and deleted =#{article.deleted}
+			</if>
+			<!-- 根据文章的标题 -->
+			<if test="article.title!=null and article.title!=''">
+				and title like "%"#{article.title} "%"
+			</if>
+			<!-- 首页查询 -->
+			<if test="article.channelId!=null">
+				and channel_id = #{article.channelId}
+			</if>
+			<if test="article.categoryId!=null">
+				and category_id = #{article.categoryId}
+			</if>
+			<!-- 热点文章 -->
+			<if test="article.hot!=null">
+				and hot =#{article.hot}
+			</if>
+		</where>
+		order by created desc
+	</select>
+	
+	<select id="select" resultMap="articleResultMap">
+		select * from cms_article where id =#{id}
+	</select>
+	
+	<!-- 修改文章 -->
+	<update id="update">
+		update cms_article
+		<trim prefix="set" suffix="where id = #{id}" suffixOverrides=",">
+			<if test="title!=null and title!=''">
+				title =#{title},
+			</if>
+			<if test="status!=null">
+				status =#{status},
+			</if>
+			<if test="hot!=null">
+				hot =#{hot},
+			</if>
+		</trim>
+	</update>
+	
+	<!-- 查询军事文 -->
+	<select id="getSections" resultMap="articleResultMap">
+		select b.* from 
+		section as a LEFT JOIN cms_article as b
+		on a.article_id=b.id
+		<where>
+			<if test="article.title!=null and article.title!=''">
+				like b.title "%" #{article.title} "%"
+			</if>
+		</where>
+	</select>
+	
+	<select id="addId" resultType="int">
+		select b.id from 
+		section as a LEFT JOIN cms_article as b
+		on a.article_id=b.id where b.title like '%${title}%'
+	</select>
+	
+	<insert id="addContent">
+		insert into section(article_id,section_content,section_type) value(#{addId},#{content},#{type})
+	</insert>
+</mapper>

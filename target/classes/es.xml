@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:elasticsearch="http://www.springframework.org/schema/data/elasticsearch"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/data/elasticsearch http://www.springframework.org/schema/data/elasticsearch/spring-elasticsearch.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <!-- 扫描Dao包，自动创建实例(指定一个es仓库的包扫描位置) -->
+    <!--我们 主要是用spring-data的方式来操作es的增删改查 -->
+    <!-- 这个包下就是我们声明的es的仓库接口 -->
+	<elasticsearch:repositories base-package="com.wy.es" />
+	<!-- es提供了2个端口号:9200和9300
+		9200:对浏览器暴露的端口号
+		9300:是对java编程需要操作es所暴露的端口号
+	 -->
+	 <!-- 指定es的ip地址和端口号 -->
+	<elasticsearch:transport-client id="client" cluster-nodes="192.168.88.188:9300" /> <!-- spring data elasticSearcheDao 必须继承 ElasticsearchTemplate -->
+		
+	<!-- 声明一个对象,叫ElasticsearchTemplate 就是负责es的CRUD的操作-->
+	<bean id="elasticsearchTemplate"
+		class="org.springframework.data.elasticsearch.core.ElasticsearchTemplate">
+		<constructor-arg name="client" ref="client"></constructor-arg>
+	</bean>
+	
+    
+</beans>

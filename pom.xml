@@ -6,7 +6,7 @@
 
     <groupId>com.wy</groupId>
     <artifactId>cmsdemo</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
     <packaging>war</packaging>
 
     <!-- 定义主要版本号 -->

@@ -1,4 +1,7 @@
 package com.wy.bean;
+
+import java.io.Serializable;
+
 /**
  * 
  * @ClassName: Category 
@@ -6,7 +9,7 @@ package com.wy.bean;
  * @author: charles
  * @date: 2020年3月3日 上午11:23:13
  */
-public class Category {
+public class Category implements Serializable {
 	
 	private Integer id;//主键
 	private String name;//

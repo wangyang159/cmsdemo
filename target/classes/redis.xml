@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:jms="http://www.springframework.org/schema/jms" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:tool="http://www.springframework.org/schema/tool"
+
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+        http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+        http://www.springframework.org/schema/jms
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/tool http://www.springframework.org/schema/tool/spring-tool.xsd
+        http://www.springframework.org/schema/websocket">
+        
+          <!-- 声明三种备用的序列化方式,如果不指定redis的序列化方式,redis会默认使用jdk的序列化方式 -->
+          <bean id="jdkSerializationRedisSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"></bean>
+          <!-- string的序列化方式 -->
+          <bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+          <!-- jackson序列化方式 -->
+          <bean id="jackson2JsonRedisSerializer" class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+          	<constructor-arg value="java.lang.Object"></constructor-arg>
+          </bean>
+          
+          
+        <!-- 操作redis的CRUD 的核心类是:RedisTemplate -->
+        <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        	<!-- 需要知道要去连接哪里的redis服务 -->
+        	<!-- 声明一个连接工厂,这个工厂里,就可以指定redis的ip和端口号 -->
+        	<property name="connectionFactory" ref="connectionFactory"></property>
+        	<!-- 指定list,string,set,zset的key和value的序列化方式 -->
+        	<property name="keySerializer" ref="stringRedisSerializer"></property>
+        	<property name="valueSerializer" ref="jdkSerializationRedisSerializer"></property>
+        	<!-- 指定hash类型的key于vlue的序列化方式 -->
+        	<property name="hashKeySerializer" ref="stringRedisSerializer"></property>
+        	<property name="hashValueSerializer" ref="jdkSerializationRedisSerializer"></property>
+        </bean>
+        
+        
+        <!--声明一个连接工厂:为了指定redis所在服务器的ip和redis的端口号 -->
+        <bean id="connectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        	<!-- 声明一个IP地址 -->
+        	<property name="hostName" value="192.168.88.188"></property>
+        	<!-- 指定一个端口号 -->
+        	<property name="port" value="6379"></property>
+        </bean>
+        
+        
+        
+</beans>

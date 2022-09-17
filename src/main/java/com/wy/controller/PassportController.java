@@ -103,9 +103,6 @@ public class PassportController {
 			result.setMsg("未知错误，请联系管理员");//错误消息
 		}
 		return result;
-	
-		
-		
 	}
 	
 	/**
@@ -173,7 +170,6 @@ public class PassportController {
 			e.printStackTrace();
 			result.setCode(300);//状态码
 			result.setMsg(e.message);//错误消息
-			
 		}catch (Exception e) {
 			e.printStackTrace();
 			result.setCode(400);//状态码

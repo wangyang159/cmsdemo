@@ -3,6 +3,11 @@ package com.wy.bean;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
 /**
  * 
  * @ClassName: Article 
@@ -10,6 +15,7 @@ import java.util.Date;
  * @author: charles
  * @date: 2020年3月3日 上午11:25:22
  */
+@Document(indexName="articles",type="article")
 public class Article implements Serializable {
 
 	/**
@@ -18,9 +24,12 @@ public class Article implements Serializable {
 	 * @Description: TODO
 	 */
 	private static final long serialVersionUID = 1L;
+	@Id
 	private Integer id;//主键
+	@Field(index=true,store=true,analyzer="ik_max_word",searchAnalyzer="ik_max_word",type=FieldType.text)
 	private String title;//文章标题
 	private String summary;//文章摘要
+	@Field(index=true,store=true,analyzer="ik_max_word",searchAnalyzer="ik_max_word",type=FieldType.text)
 	private String content;//文章内容
 	private String picture;//文章的标题图片
 	

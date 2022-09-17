@@ -9,6 +9,10 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import com.wy.bean.Collect;
+import com.wy.bean.Comment;
+import com.wy.service.CollectService;
+import com.wy.service.CommentService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +34,12 @@ public class MyController {
 	
 	@Resource
 	private ArticleService articleService;
-	
+
+	@Resource
+	private CollectService collectService;//收藏
+
+	@Resource
+	private CommentService commentService;//评论
 
 	/**
 	 * 跳转到个人页面
@@ -120,5 +129,44 @@ public class MyController {
 	public Article article(Integer id) {
 		return articleService.select(id);
 	}
-	
+
+	/**
+	 *
+	 * @Title: collect
+	 * @Description: 收藏文章
+	 * @return
+	 * @return: boolean
+	 */
+	@ResponseBody
+	@RequestMapping("collect.do")
+	public boolean collect(Collect collect, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {// 如果已经登录则执行收藏
+			collect.setUserId(user.getId());// 收藏人
+			collect.setCreated(new Date());// 收藏时间
+			return collectService.insert(collect);
+		}
+		return false;// 没有登录则不执行收藏
+	}
+
+	/**
+	 *
+	 * @Title: collect
+	 * @Description: 评论文章
+	 * @return
+	 * @return: boolean
+	 */
+	@ResponseBody
+	@RequestMapping("addComment.do")
+	public boolean addComment(Comment comment, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {// 如果已经登录则才能评论
+			comment.setUserId(user.getId());// 评论人
+			comment.setCreated(new Date());// 收藏时间
+			return commentService.insert(comment) >0;
+		}
+		return false;// 没有登录则不能评论
+
+	}
+
 }

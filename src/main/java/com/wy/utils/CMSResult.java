@@ -8,7 +8,7 @@ package com.wy.utils;
  * @param <T>
  */
 public class CMSResult<T> {
-   //返回结果的状态
+    //返回结果的状态
 	private Integer code;
 	private String  msg;
 	private T data;
