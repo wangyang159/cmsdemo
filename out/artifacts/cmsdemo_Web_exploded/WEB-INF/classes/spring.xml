@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <context:component-scan base-package="com.wy"></context:component-scan>
+
+<!--  正常要引入但是由于SSM问题配置值加载不到了，代码中写死了  <context:property-placeholder location="classpath:path.properties"/>-->
+
+    <!-- mysql数据源 -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql:///cms"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 关联mybatis核心配置文件 -->
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+        <!-- 扫描mapper文件 但是注意我把他注释了，因为如果使用这个那么你的Dao层的Mapper文件就要在source下
+            但是我们一般都是使用扫描器，使得Mapper文件也在Dao层里
+            <property name="mapperLocations" value="classpath:mappers/*"/>
+        -->
+    </bean>
+
+
+    <!-- 托管sqlSession工厂 -->
+    <bean class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactoryBean"/>
+    </bean>
+
+    <!-- dao层接口与附带mapper文件扫描 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.wy.dao"/>
+    </bean>
+
+    <!-- 事务管理器 ，这个事务管理器可以先注释有需要的时候在用-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--配置事务 transaction-manager:表示关联的事务管理器是谁 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!-- 事务属性配置 -->
+        <tx:attributes>
+            <!-- 以find.select get开头的方法为只读事务，用来提高数据库的性能 -->
+            <tx:method name="find*" read-only="true" />
+            <tx:method name="select*" read-only="true" />
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="load*" read-only="true" />
+            <tx:method name="list*" read-only="true" />
+            <!-- 其他的方法为默认事务 -->
+            <tx:method name="*" propagation="REQUIRED" />
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 配置aop 这个也可以先注释，这个是面向切面编程用的，不过我用它做关联事物的操作
+        当然想要关联事物还有一种方法，不过不常用，有兴趣的可以看看别的资料
+    -->
+    <aop:config>
+        <!-- 配置切点表达式 -->
+        <aop:pointcut
+                expression="execution(* com.wy.service.*.*(..))" id="pointcut" />
+        <!-- 关联事务 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut" />
+    </aop:config>
+
+</beans>

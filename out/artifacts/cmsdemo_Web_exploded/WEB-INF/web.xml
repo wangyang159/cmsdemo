@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+
+    <!-- 实例化配置中央控制器 -->
+    <servlet>
+        <servlet-name>springMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!-- 关联springMVC核心配置文件，这个文件路径必须正确，我是放在里resource下 -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springMVC.xml</param-value>
+        </init-param>
+    </servlet>
+    <!-- 配置中央控制器生效的前提或者说是拦截的请求格式，支持通配符 -->
+    <servlet-mapping>
+        <servlet-name>springMVC</servlet-name>
+        <url-pattern>*.do</url-pattern>
+    </servlet-mapping>
+
+    <!-- 使用容器装配监听器 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- 为监听器指定spring核心配置文件，可以不用这一步，但是前提是在source下有spring框架默认加载的文件，我不喜欢用那个格式，有兴趣的可以网上查查，我记不清了 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring.xml</param-value>
+    </context-param>
+
+</web-app>

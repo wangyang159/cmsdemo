@@ -11,6 +11,7 @@ import com.wy.dao.ArticleMapper;
 
 @Service
 public class ArticleServiceImpl implements ArticleService{
+
 	@Autowired
 	private ArticleMapper articleDao;
 

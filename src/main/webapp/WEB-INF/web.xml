@@ -36,7 +36,7 @@
     <!-- 为监听器指定spring核心配置文件，可以不用这一步，但是前提是在source下有spring框架默认加载的文件，我不喜欢用那个格式，有兴趣的可以网上查查，我记不清了 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath:springMVC.xml</param-value>
+        <param-value>classpath:spring.xml</param-value>
     </context-param>
 
 </web-app>
