@@ -3,6 +3,8 @@ package com.wy.dao;
 import java.util.List;
 
 import com.wy.bean.User;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**

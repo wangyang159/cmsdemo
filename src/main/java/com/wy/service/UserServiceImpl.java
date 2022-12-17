@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService {
 	public boolean insert(User user) {
 		//使用工具类处理注册业务逻辑
 		//1用户名不能为空
-
 		if(!StringUtil.hasText(user.getUsername()))
 		throw new CMSException("用户名不能为空");
 		//2用户名的长度
@@ -76,9 +75,9 @@ public class UserServiceImpl implements UserService {
 			throw new CMSException("密码不能为空");
 		//3.先根据用户查询是否有该用户
 		User u = this.selectByName(user.getUsername());
-	   if(null ==u)
-			throw new CMSException("用户名不正确"); 
-	   //4.比较密码
+	    if(null ==u)
+			throw new CMSException("用户名不正确");
+	    //4.比较密码
 		if(!u.getPassword().equals(Md5Util.encode(user.getPassword())))
 			throw new CMSException("密码不正确"); 
 		//5不可让禁用用户登录

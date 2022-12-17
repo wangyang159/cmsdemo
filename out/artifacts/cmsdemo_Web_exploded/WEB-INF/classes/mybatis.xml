@@ -5,6 +5,7 @@
 <configuration>
     <!-- 启动下划线之后首字母大写 -->
     <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING" />
         <setting name="mapUnderscoreToCamelCase" value="true"/>
     </settings>
     <!-- 启动分页拦截器，如果你的web中用到里spring提供的PageInfo那么就要配置拦截器 -->

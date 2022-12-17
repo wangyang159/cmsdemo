@@ -3,9 +3,7 @@
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wy.dao.UserMapper">
 	<select id="selects" resultType="com.wy.bean.User">
-
 		select * from cms_user
-
 		<where>
 			<if test="username!=null and username!=''">
 				username like "%"#{username}"%"
@@ -13,10 +11,9 @@
 			<if test="locked!=null">
 				and locked=#{locked}
 			</if>
-
 		</where>
-
 	</select>
+
 	<update id="update">
 		update cms_user
 		<trim prefix="set" suffix="where id =#{id}">
@@ -34,6 +31,6 @@
 
 
 	<select id="selectByName" resultType="com.wy.bean.User">
-		select * from cms_user where username =#{usename}
+		select * from cms_user where username = #{name}
 	</select>
 </mapper>

@@ -83,7 +83,7 @@ public class PassportController {
 	 * @return: CMSResult<User>
 	 */
 	@ResponseBody
-	@PostMapping("login.do")
+	@PostMapping(value="login.do")
 	public CMSResult<User> login(User user,HttpSession session){
 		CMSResult<User> result =new CMSResult<User>();
 		try {
