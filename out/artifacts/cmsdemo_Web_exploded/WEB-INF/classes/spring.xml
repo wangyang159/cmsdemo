@@ -11,7 +11,7 @@
 
     <context:component-scan base-package="com.wy"></context:component-scan>
 
-<!--  正常要引入但是由于SSM问题配置值加载不到了，代码中写死了  <context:property-placeholder location="classpath:path.properties"/>-->
+<!--  正常要引入<context:property-placeholder location="classpath:path.properties"/>但是由于SSM有的时候不识别配置值加载不到，所以代码中写死了  -->
 
     <!-- mysql数据源 -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
